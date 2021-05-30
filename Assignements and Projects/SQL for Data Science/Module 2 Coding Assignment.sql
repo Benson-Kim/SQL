@@ -81,3 +81,4 @@ SELECT AlbumId
 FROM Tracks
 GROUP BY (AlbumId)
 HAVING COUNT(TrackId) >= 12
+
