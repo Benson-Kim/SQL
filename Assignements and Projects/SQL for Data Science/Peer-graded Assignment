@@ -46,7 +46,7 @@ Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.
 3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
 
 	Answer:
-        No
+        NO
 	
 	SQL code used to arrive at answer:
         SELECT *
