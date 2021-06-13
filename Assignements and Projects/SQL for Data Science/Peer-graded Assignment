@@ -1,7 +1,3 @@
-/***
-Peer-graded Assignment: Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset
-***/
-
 Part 1: Yelp Dataset Profiling and Understanding
 
 1. Profile the data by finding the total number of records for each of the tables below:
@@ -252,18 +248,26 @@ Copy and Paste the Resulting Table Below (2 columns â€“ star rating and cou
 9. Are there more reviews with the word "love" or with the word "hate" in them?
 
 	Answer:
-        Yes
-        +-----------------+-----------------+
-        | Positive Review | Negative Review |
-        +-----------------+-----------------+
-        |            1780 |             232 |
-        +-----------------+-----------------+
+        "Love"
+
+        +------+------+
+        | love | hate |
+        +------+------+
+        | 1780 |  232 |
+        +------+------+
 	
 	SQL code used to arrive at answer:
 
-        SELECT
-        (SELECT COUNT(text) FROM review  WHERE text LIKE '%love%') as  'Positive Review'
-        ,(SELECT COUNT(text) FROM review  WHERE text LIKE '%hate%') as  'Negative Review'
+        SELECT COUNT(CASE 
+			WHEN TEXT LIKE '%love%'
+				THEN 'love'
+			END) AS love
+	    ,COUNT(CASE 
+			WHEN TEXT LIKE '%hate%'
+				THEN 'hate'
+			END) AS hate
+        FROM review
+
     
 10. Find the top 10 users with the most fans:
 
@@ -351,19 +355,55 @@ SQL code used for analysis:
         ,is_open
     FROM business
     GROUP BY is_open
-    
-    
+	
+	
 3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
 
-Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, 
+predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, 
+so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
 	
 i. Indicate the type of analysis you chose to do:
-         
+        Identify the relationship between user 'elite_years' and number of 'fans' they have and size of 'review_count'
          
 ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
-                           
+        I will need to extract user details such as id, name, the number of fans, the number of reviews and the count of user elite_years
                   
 iii. Output of your finished dataset:
-         
+            +------------------------+---------+------+--------------+---------------+
+            | id                     | name    | fans | review_count | count(E.year) |
+            +------------------------+---------+------+--------------+---------------+
+            | -lh59ko3dxChBSZ9U7LfUw | Lissa   |  120 |          834 |             9 |
+            | -fUARDNuXAfrOn4WLSZLgA | Ed      |   38 |          904 |             8 |
+            | -a0LRFr94D9ohyBJCKVvXQ | Elaine  |   18 |          332 |             7 |
+            | -kO6984fXByyZm3_6z2JYg | Dominic |   37 |          836 |             7 |
+            | --Qh8yKWAvIP4V4K8ZPfHA | Dixie   |   41 |          503 |             6 |
+            | -aAgfEUH4UoFDRXZCfJSUA | Matt    |   14 |          476 |             6 |
+            | -d2daWmftYumOaYpbD5D8Q | Jia     |    8 |          228 |             6 |
+            | -HLE-x7Lpkfprd6er-JFGg | Danial  |    5 |          136 |             5 |
+            | -5e4VTnu_pR4Gpv3VSncaw | Justin  |   13 |          177 |             4 |
+            | -C-l8EHSLXtZZVfUAUhsPA | Nieves  |   80 |          178 |             4 |
+            | -dbWm5L_Ol2hZeLRoQOK7w | Mel     |    9 |          156 |             4 |
+            | -0HhZbPBlB1YZx3BhAfaEA | Tasha   |    8 |          250 |             3 |
+            | -50XWnmQGqBgEI-9ANvLlg | Lalena  |   25 |          224 |             3 |
+            | -EWQZjRHAKMddHW_dZTvdw | Chris   |    2 |           70 |             3 |
+            | -9SoHrhiiUVmx6-MkyR4RA | Brad    |    1 |          182 |             2 |
+            | -ga7pQvnJcMB1_pIapHQRQ | Tracy   |    5 |           71 |             2 |
+            | -hYYjAXSAa657rY0ANtTGQ | Kristen |   15 |          428 |             2 |
+            | --BumyUHiO_7YsHurb9Hkw | Sapna   |    1 |           38 |             1 |
+            | -9RU4LuI_TfYgv9rBijJoQ | Keith   |    3 |           61 |             1 |
+            | -GD0XVUKRj96vf6TP68Evw | Maung   |    0 |           54 |             1 |
+            | -cvrhCPCKHUkEsDak_fY4g | Jamie   |    4 |           95 |             1 |
+            +------------------------+---------+------+--------------+---------------+
          
 iv. Provide the SQL code you used to create your final dataset:
+
+        SELECT id
+            ,name
+            ,fans
+            ,review_count
+            ,count(E.year)
+        FROM User U
+        INNER JOIN elite_years E ON U.id = E.user_id
+        GROUP BY E.user_id
+        ORDER BY count(E.year) DESC
